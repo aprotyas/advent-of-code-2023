@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		33E6BFBF2B19FFC5007086D2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6BFBE2B19FFC5007086D2 /* main.cpp */; };
+		33E6BFCD2B1A0082007086D2 /* day1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6BFCB2B1A0082007086D2 /* day1.cpp */; };
+		33E6BFD22B1A0A68007086D2 /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6BFD02B1A0A68007086D2 /* utilities.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,12 @@
 /* Begin PBXFileReference section */
 		33E6BFBB2B19FFC5007086D2 /* AdventOfCode2023 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdventOfCode2023; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E6BFBE2B19FFC5007086D2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		33E6BFCB2B1A0082007086D2 /* day1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = day1.cpp; sourceTree = "<group>"; };
+		33E6BFCC2B1A0082007086D2 /* day1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = day1.hpp; sourceTree = "<group>"; };
+		33E6BFCE2B1A0123007086D2 /* day1part1.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = day1part1.in; sourceTree = "<group>"; };
+		33E6BFCF2B1A0911007086D2 /* solutions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = solutions.hpp; sourceTree = "<group>"; };
+		33E6BFD02B1A0A68007086D2 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
+		33E6BFD12B1A0A68007086D2 /* utilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utilities.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +66,22 @@
 			isa = PBXGroup;
 			children = (
 				33E6BFBE2B19FFC5007086D2 /* main.cpp */,
+				33E6BFD32B1A1410007086D2 /* Inputs */,
+				33E6BFD02B1A0A68007086D2 /* utilities.cpp */,
+				33E6BFD12B1A0A68007086D2 /* utilities.hpp */,
+				33E6BFCB2B1A0082007086D2 /* day1.cpp */,
+				33E6BFCC2B1A0082007086D2 /* day1.hpp */,
+				33E6BFCF2B1A0911007086D2 /* solutions.hpp */,
 			);
 			path = AdventOfCode2023;
+			sourceTree = "<group>";
+		};
+		33E6BFD32B1A1410007086D2 /* Inputs */ = {
+			isa = PBXGroup;
+			children = (
+				33E6BFCE2B1A0123007086D2 /* day1part1.in */,
+			);
+			path = Inputs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +141,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33E6BFD22B1A0A68007086D2 /* utilities.cpp in Sources */,
+				33E6BFCD2B1A0082007086D2 /* day1.cpp in Sources */,
 				33E6BFBF2B19FFC5007086D2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,7 +268,10 @@
 		33E6BFC32B19FFC5007086D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++23";
 				CODE_SIGN_STYLE = Automatic;
+				GCC_WARN_PEDANTIC = YES;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -252,7 +279,10 @@
 		33E6BFC42B19FFC5007086D2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++23";
 				CODE_SIGN_STYLE = Automatic;
+				GCC_WARN_PEDANTIC = YES;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
