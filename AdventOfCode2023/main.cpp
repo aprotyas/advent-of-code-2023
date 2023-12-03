@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
+#include <expected>
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -27,8 +28,12 @@
 #include <utility>
 #include <vector>
 
+#include <tclap/CmdLine.h>
+
 using Day = std::size_t;
 using namespace std::string_view_literals;
+
+static constexpr Day daysSolved = 1;
 
 bool isCaseInsensitiveCharEqual(const char a, const char b)
 {
@@ -99,30 +104,42 @@ int solveProblem(Day day, Utilities::ShowResults showResults)
 }
 
 int main(int argc, const char * argv[]) {
-    if (argc != 2) {
-        std::cerr << "Wrong arguments provided. Either pass the <day> you'd like to see solved, or pass `all` for all solutions.\n";
-        return EXIT_FAILURE;
-    }
+    const auto daysToSolve = [argc, argv] -> std::expected<std::vector<Day>, TCLAP::ArgException> {
+        try {
+            TCLAP::CmdLine cmd("Solve the Advent of Code 2023 problems.");
+            TCLAP::SwitchArg solveAllArg("a", "all", "Solve all problems.");
 
-    std::optional<Day> dayToSolve;
-    const bool solveAll = isCaseInsensitiveEqual(argv[1], "all"sv);
-    if (solveAll)
-        std::cout << "Solving all problems!\n";
-    else {
-        auto maybeDayToSolve = std::atoi(argv[1]);
-        if (maybeDayToSolve)
-            dayToSolve = maybeDayToSolve;
-        if (!dayToSolve) {
-            std::cerr << "Invalid day provided!\n";
-            return EXIT_FAILURE;
+            auto allowedDays = [] {
+                // This should really be std::views::iota | std::ranges::to, but clang-1500.3.3.4 doesn't implement the latter.
+                std::vector<Day> days { daysSolved };
+                std::iota(days.begin(), days.end(), 1);
+                return days;
+            }();
+            const auto daysArgConstraint = std::make_unique<TCLAP::ValuesConstraint<Day>>(allowedDays);
+            TCLAP::UnlabeledMultiArg<Day> daysArg("days", "The days to solve.", false, daysArgConstraint.get());
+
+            TCLAP::OneOf argumentGroup { cmd };
+            argumentGroup.add(solveAllArg).add(daysArg);
+
+            cmd.parse(argc, argv);
+
+            if (solveAllArg.isSet())
+                return allowedDays;
+            else if (daysArg.isSet())
+                return daysArg.getValue();
+            else
+                throw TCLAP::CmdLineParseException("Wrong arguments provided! Either pass the <day>s you'd like to see solved, or pass `--all` for all solutions.");
+        } catch (TCLAP::ArgException& e) {
+            return std::unexpected { e };
         }
-    }
+    }();
 
+    // This could be chained monadically with std::expected::[and_then, or_else], but clang-1500.3.3.4 doesn't implement these operations.
     int returnValue = EXIT_SUCCESS;
-    constexpr Day daysSolved = 1;
-    std::ranges::for_each(std::views::iota(solveAll ? 1 : *dayToSolve) | std::views::take(solveAll ? daysSolved : *dayToSolve), [&returnValue] (Day day) {
-        returnValue &= solveProblem(day, Utilities::ShowResults::Yes);
-    });
+    if (daysToSolve)
+        std::ranges::for_each(daysToSolve.value(), [&returnValue] (Day day) { returnValue &= solveProblem(day, Utilities::ShowResults::Yes); });
+    else
+        std::cerr << "Error: " << daysToSolve.error().error() << '\n';
 
-    return returnValue;
+    return daysToSolve.has_value() & returnValue;
 }
