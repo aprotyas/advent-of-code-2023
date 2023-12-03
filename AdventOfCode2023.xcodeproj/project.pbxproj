@@ -1056,26 +1056,38 @@
 		33E6BFC32B19FFC5007086D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_OTHER_FLAGS = "\"-analyzer-tidy-checker=-*,clang-analyzer-*,bugprone-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*\"";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++23";
+				CLANG_STATIC_ANALYZER_MODE = deep;
+				CLANG_WARN_IMPLICIT_FALLTHROUGH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				EXCLUDED_SOURCE_FILE_NAMES = "$(SRCROOT)/ThirdParty/tclap/**/*";
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/ThirdParty/tclap/include";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 			};
 			name = Debug;
 		};
 		33E6BFC42B19FFC5007086D2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_OTHER_FLAGS = "\"-analyzer-tidy-checker=-*,clang-analyzer-*,bugprone-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*\"";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++23";
+				CLANG_STATIC_ANALYZER_MODE = deep;
+				CLANG_WARN_IMPLICIT_FALLTHROUGH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				EXCLUDED_SOURCE_FILE_NAMES = "$(SRCROOT)/ThirdParty/tclap/**/*";
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/ThirdParty/tclap/include";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 			};
 			name = Release;
 		};

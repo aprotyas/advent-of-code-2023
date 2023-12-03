@@ -11,20 +11,22 @@
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
-#include <ranges>
+#include <numeric>
 
 namespace Day1 {
 
 void solvePart1(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
 {
-    uint64_t sumOfCalibrationValues = 0;
-    std::ranges::for_each(input.cbegin(), input.cend(), [&sumOfCalibrationValues](const auto& line) {
-        const auto isDigit = [] (unsigned char ch) {
-            return std::isdigit(ch);
+    auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
+        const auto isDigit = [] (unsigned char character) {
+            return std::isdigit(character);
         };
-        uint64_t calibrationValue = static_cast<uint64_t>(*std::ranges::find_if(line.cbegin(), line.cend(), isDigit) - '0') * 10;
-        calibrationValue += static_cast<uint64_t>(*std::ranges::find_if(line.crbegin(), line.crend(), isDigit) - '0');
+        constexpr uint64_t leftDigitMultiplier = 10;
+        const auto leftDigit = static_cast<uint64_t>(*std::ranges::find_if(line.cbegin(), line.cend(), isDigit) - '0');
+        const auto rightDigit = static_cast<uint64_t>(*std::ranges::find_if(line.crbegin(), line.crend(), isDigit) - '0');
+        const auto calibrationValue = leftDigit * leftDigitMultiplier + rightDigit;
         sumOfCalibrationValues += calibrationValue;
+        return sumOfCalibrationValues;
     });
 
     if (showResults == Utilities::ShowResults::Yes)

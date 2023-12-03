@@ -18,7 +18,7 @@ namespace Utilities {
 enum class ShowResults : bool { No, Yes };
 
 using ProblemInput = std::vector<std::string>;
-using ProblemInputs = std::pair<ProblemInput, ProblemInput>;
+using ProblemInputs = std::array<ProblemInput, 2>;
 using ProblemSolver = std::function<void(const ProblemInputs&, ShowResults)>;
 
 } // namespace Utilities

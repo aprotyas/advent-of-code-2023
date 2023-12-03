@@ -35,31 +35,31 @@ using namespace std::string_view_literals;
 
 static constexpr Day daysSolved = 1;
 
-bool isCaseInsensitiveCharEqual(const char a, const char b)
+auto isCaseInsensitiveCharEqual(const char lhs, const char rhs) -> bool
 {
-    return std::tolower(static_cast<unsigned char>(a)) ==
-           std::tolower(static_cast<unsigned char>(b));
+    return std::tolower(static_cast<unsigned char>(lhs)) ==
+           std::tolower(static_cast<unsigned char>(rhs));
 }
 
-bool isCaseInsensitiveEqual(std::string_view lhs, std::string_view rhs)
+auto isCaseInsensitiveEqual(std::string_view lhs, std::string_view rhs) -> bool
 {
     return std::ranges::equal(lhs, rhs, isCaseInsensitiveCharEqual);
 }
 
 // Lifted from https://stackoverflow.com/a/26221725.
 template<typename ... Args>
-std::string stringFormat(const std::string& format, Args ... args )
+auto stringFormat(const std::string& format, Args ... args ) -> std::string
 {
-    int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'.
+    const int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'.
     if (size_s <= 0)
         throw std::runtime_error("Error during formatting.");
     auto size = static_cast<size_t>(size_s);
     auto buf = std::make_unique<char[]>(size);
     std::snprintf(buf.get(), size, format.c_str(), args ...);
-    return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside.
+    return { buf.get(), buf.get() + size - 1 }; // We don't want the '\0' inside.
 }
 
-Utilities::ProblemInput inputFromPath(const std::filesystem::path& path)
+auto inputFromPath(const std::filesystem::path& path) -> Utilities::ProblemInput
 {
     if (!std::filesystem::exists(path)) {
         std::cerr << "Problem input at path " << path << " does not exist.\n";
@@ -79,7 +79,7 @@ Utilities::ProblemInput inputFromPath(const std::filesystem::path& path)
     return input;
 }
 
-int solveProblem(Day day, Utilities::ShowResults showResults)
+auto solveProblem(Day day, Utilities::ShowResults showResults) -> int
 {
     // This should be constexpr, but I'm too lazy to adopt https://github.com/serge-sans-paille/frozen.
     static std::unordered_map<Day, Utilities::ProblemSolver> problemSolvers {
@@ -94,9 +94,9 @@ int solveProblem(Day day, Utilities::ShowResults showResults)
     std::cout << "Acquiring solution inputs for " << day << '\n';
     const auto inputFileName = [&day] (int part) { return stringFormat("day%dpart%d.in", day, part); };
     const auto inputFilePath = [] (const std::string& name) { return std::filesystem::path(__FILE__).parent_path() / "Inputs" / name; };
-    const auto inputFileNames = std::make_pair(inputFileName(1), inputFileName(2));
-    const auto inputFilePaths = std::make_pair(inputFilePath(inputFileNames.first), inputFilePath(inputFileNames.second));
-    const auto inputs = std::make_pair(inputFromPath(inputFilePaths.first), inputFromPath(inputFilePaths.second));
+    const auto inputFileNames = std::array { inputFileName(1), inputFileName(2) };
+    const auto inputFilePaths = std::array { inputFilePath(inputFileNames[0]), inputFilePath(inputFileNames[1]) };
+    const auto inputs = std::array { inputFromPath(inputFilePaths[0]), inputFromPath(inputFilePaths[1]) };
 
     std::cout << "Solving day " << day << '\n';
     problemSolvers[day](inputs, showResults);
@@ -125,10 +125,9 @@ int main(int argc, const char * argv[]) {
 
             if (solveAllArg.isSet())
                 return allowedDays;
-            else if (daysArg.isSet())
+            if (daysArg.isSet())
                 return daysArg.getValue();
-            else
-                throw TCLAP::CmdLineParseException("Wrong arguments provided! Either pass the <day>s you'd like to see solved, or pass `--all` for all solutions.");
+            return std::unexpected { TCLAP::CmdLineParseException("Wrong arguments provided! Either pass the <day>s you'd like to see solved, or pass `--all` for all solutions.") };
         } catch (TCLAP::ArgException& e) {
             return std::unexpected { e };
         }
@@ -141,5 +140,5 @@ int main(int argc, const char * argv[]) {
     else
         std::cerr << "Error: " << daysToSolve.error().error() << '\n';
 
-    return daysToSolve.has_value() & returnValue;
+    return static_cast<int>(daysToSolve.has_value()) & returnValue;
 }
