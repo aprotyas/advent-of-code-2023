@@ -32,7 +32,7 @@
 
 using namespace std::string_view_literals;
 
-static constexpr Utilities::Day daysSolved = 2;
+static constexpr Utilities::Day daysSolved = 3;
 
 auto isCaseInsensitiveCharEqual(const char lhs, const char rhs) -> bool
 {
@@ -84,6 +84,7 @@ auto solveProblem(Utilities::Day day, Utilities::ShowResults showResults) -> int
     static std::unordered_map<Utilities::Day, Utilities::ProblemSolver> problemSolvers {
         { 1, Day1::solveProblem },
         { 2, Day2::solveProblem },
+        { 3, Day3::solveProblem },
     };
 
     if (!problemSolvers.contains(day)) {

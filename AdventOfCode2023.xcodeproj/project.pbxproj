@@ -58,6 +58,7 @@
 		33E6C4352B1BEB5D007086D2 /* test46.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C2FE2B1BEB5D007086D2 /* test46.cpp */; };
 		33E6C4362B1BEB5D007086D2 /* test47.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C2FF2B1BEB5D007086D2 /* test47.cpp */; };
 		33E6C43D2B1DA14C007086D2 /* day2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C43B2B1DA14C007086D2 /* day2.cpp */; };
+		33E6C4452B1DD97F007086D2 /* day3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C4432B1DD97F007086D2 /* day3.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -403,6 +404,9 @@
 		33E6C43C2B1DA14C007086D2 /* day2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = day2.hpp; sourceTree = "<group>"; };
 		33E6C4402B1DBD79007086D2 /* day1.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day1.in; sourceTree = "<group>"; };
 		33E6C4412B1DBD79007086D2 /* day2.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day2.in; sourceTree = "<group>"; };
+		33E6C4422B1DD94E007086D2 /* day3.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = day3.in; sourceTree = "<group>"; };
+		33E6C4432B1DD97F007086D2 /* day3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = day3.cpp; sourceTree = "<group>"; };
+		33E6C4442B1DD97F007086D2 /* day3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = day3.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -451,6 +455,7 @@
 			children = (
 				33E6C4402B1DBD79007086D2 /* day1.in */,
 				33E6C4412B1DBD79007086D2 /* day2.in */,
+				33E6C4422B1DD94E007086D2 /* day3.in */,
 			);
 			path = Inputs;
 			sourceTree = "<group>";
@@ -836,6 +841,8 @@
 				33E6BFCC2B1A0082007086D2 /* day1.hpp */,
 				33E6C43B2B1DA14C007086D2 /* day2.cpp */,
 				33E6C43C2B1DA14C007086D2 /* day2.hpp */,
+				33E6C4432B1DD97F007086D2 /* day3.cpp */,
+				33E6C4442B1DD97F007086D2 /* day3.hpp */,
 			);
 			path = Solutions;
 			sourceTree = "<group>";
@@ -911,6 +918,7 @@
 				33E6C4292B1BEB5D007086D2 /* test33.cpp in Sources */,
 				33E6C4252B1BEB5D007086D2 /* test29.cpp in Sources */,
 				33E6C40E2B1BEB5D007086D2 /* test5.cpp in Sources */,
+				33E6C4452B1DD97F007086D2 /* day3.cpp in Sources */,
 				33E6C43D2B1DA14C007086D2 /* day2.cpp in Sources */,
 				33E6C4352B1BEB5D007086D2 /* test46.cpp in Sources */,
 				33E6C4312B1BEB5D007086D2 /* test42.cpp in Sources */,

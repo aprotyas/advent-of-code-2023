@@ -10,5 +10,6 @@
 
 #include "Solutions/day1.hpp"
 #include "Solutions/day2.hpp"
+#include "Solutions/day3.hpp"
 
 #endif /* solutions_h */
