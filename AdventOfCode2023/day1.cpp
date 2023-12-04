@@ -21,8 +21,6 @@
 
 namespace Day1 {
 
-static constexpr uint64_t leftDigitMultiplier = 10;
-
 auto characterIsDigit(unsigned char character) -> bool
 {
     return std::isdigit(character) != 0;
@@ -41,7 +39,7 @@ using namespace std::string_view_literals;
 constexpr std::array<std::string_view, 9> digitWords { "one"sv, "two"sv, "three"sv, "four"sv, "five"sv, "six"sv, "seven"sv, "eight"sv, "nine"sv };
 }
 
-auto produceDigit(const std::string& line, const std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>& isDigit, const TraversalDirection direction) -> uint64_t {
+auto produceDigit(const std::string_view line, const std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>& isDigit, const TraversalDirection direction) -> uint64_t {
     const auto indices = [length = line.length(), &direction] {
         std::vector<uint64_t> indicesToFill;
         indicesToFill.resize(length);
@@ -67,6 +65,14 @@ auto produceDigit(const std::string& line, const std::function<IsDigitResult(con
     return 0ULL;
 }
 
+auto calibrationValueForLine(const std::string_view line, const std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>& isDigit) -> uint64_t
+{
+    static constexpr uint64_t leftDigitMultiplier = 10;
+    const auto leftDigit = produceDigit(line, isDigit, TraversalDirection::LTR);
+    const auto rightDigit = produceDigit(line, isDigit, TraversalDirection::RTL);
+    return leftDigit * leftDigitMultiplier + rightDigit;
+}
+
 void solvePart1(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
 {
     auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
@@ -75,11 +81,7 @@ void solvePart1(const Utilities::ProblemInput& input, Utilities::ShowResults sho
                 return { true, IsDigitReason::CharacterIsNumeric };
             return { };
         };
-        const auto leftDigit = produceDigit(line, isDigit, TraversalDirection::LTR);
-        const auto rightDigit = static_cast<uint64_t>(*std::ranges::find_if(line.crbegin(), line.crend(), characterIsDigit) - '0');
-        const uint64_t calibrationValue = leftDigit * leftDigitMultiplier + rightDigit;
-        sumOfCalibrationValues += calibrationValue;
-        return sumOfCalibrationValues;
+        return sumOfCalibrationValues + calibrationValueForLine(line, isDigit);
     });
 
     if (showResults == Utilities::ShowResults::Yes)
@@ -106,37 +108,7 @@ void solvePart2(const Utilities::ProblemInput& input, Utilities::ShowResults sho
             return { };
         };
 
-        const auto produceDigit = [&isDigit] (const auto& line, const TraversalDirection direction) {
-            const auto indices = [length = line.length(), &direction] {
-                std::vector<uint64_t> indicesToFill;
-                indicesToFill.resize(length);
-                std::iota(indicesToFill.begin(), indicesToFill.end(), 0);
-                if (direction == TraversalDirection::RTL)
-                    std::ranges::reverse(indicesToFill);
-                return indicesToFill;
-            }();
-
-            for (const auto index : indices) {
-                const unsigned char character = line[index];
-                const auto [isDigitAnswer, isDigitReason] = isDigit(character, line, index);
-                switch (isDigitReason) {
-                case IsDigitReason::CharacterIsNumeric:
-                    return static_cast<uint64_t>(character - '0');
-                case IsDigitReason::SubstringStartingAtCharacterIsDigitWord:
-                    return *std::get<std::optional<uint64_t>>(isDigitAnswer);
-                case IsDigitReason::Unknown:
-                    continue;
-                }
-            }
-
-            return 0ULL;
-        };
-
-        const auto leftDigit = produceDigit(line, TraversalDirection::LTR);
-        const auto rightDigit = produceDigit(line, TraversalDirection::RTL);
-
-        const uint64_t calibrationValue = leftDigit * leftDigitMultiplier + rightDigit;
-        return sumOfCalibrationValues + calibrationValue;
+        return sumOfCalibrationValues + calibrationValueForLine(line, isDigit);
     });
 
     if (showResults == Utilities::ShowResults::Yes)
