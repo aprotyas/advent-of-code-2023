@@ -81,8 +81,11 @@ auto solvePart2(const auto& potentialGearPositions, const auto& numbers) -> uint
                 adjacentNumbers.at(adjacencyCount++) = number;
             }
             if (adjacencyCount > 2)
-                return std::nullopt;
+                break;
         }
+        if (adjacencyCount != 2)
+            return std::nullopt;
+
         return Gear{ potentialGearPosition, adjacentNumbers };
     };
     
