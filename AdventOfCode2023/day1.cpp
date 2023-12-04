@@ -33,13 +33,14 @@ struct IsDigitResult {
     std::variant<bool, std::optional<uint64_t>> isDigit;
     IsDigitReason reason { IsDigitReason::Unknown };
 };
+using IsDigitFunction = std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>;
 
 namespace {
 using namespace std::string_view_literals;
 constexpr std::array<std::string_view, 9> digitWords { "one"sv, "two"sv, "three"sv, "four"sv, "five"sv, "six"sv, "seven"sv, "eight"sv, "nine"sv };
 }
 
-auto produceDigit(const std::string_view line, const std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>& isDigit, const TraversalDirection direction) -> uint64_t {
+auto produceDigit(const std::string_view line, const IsDigitFunction& isDigit, const TraversalDirection direction) -> uint64_t {
     const auto indices = [length = line.length(), &direction] {
         std::vector<uint64_t> indicesToFill;
         indicesToFill.resize(length);
@@ -65,7 +66,7 @@ auto produceDigit(const std::string_view line, const std::function<IsDigitResult
     return 0ULL;
 }
 
-auto calibrationValueForLine(const std::string_view line, const std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>& isDigit) -> uint64_t
+auto calibrationValueForLine(const std::string_view line, const IsDigitFunction& isDigit) -> uint64_t
 {
     static constexpr uint64_t leftDigitMultiplier = 10;
     const auto leftDigit = produceDigit(line, isDigit, TraversalDirection::LTR);
@@ -73,19 +74,22 @@ auto calibrationValueForLine(const std::string_view line, const std::function<Is
     return leftDigit * leftDigitMultiplier + rightDigit;
 }
 
-void solvePart1(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
+auto calibrationValueForInput(const Utilities::ProblemInput& input, const IsDigitFunction& isDigit) -> uint64_t
 {
-    auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
-        const auto isDigit = [] (const unsigned char character, const std::string_view, const std::size_t) -> IsDigitResult {
-            if (characterIsDigit(character))
-                return { true, IsDigitReason::CharacterIsNumeric };
-            return { };
-        };
+    return std::accumulate(input.cbegin(), input.cend(), 0, [&isDigit](uint64_t sumOfCalibrationValues, const auto& line) {
         return sumOfCalibrationValues + calibrationValueForLine(line, isDigit);
     });
+}
 
-    if (showResults == Utilities::ShowResults::Yes)
-        std::cout << "Day 1 part 1 solution: " << sumOfCalibrationValues << '\n';
+auto solvePart1(const Utilities::ProblemInput& input) -> uint64_t
+{
+    const auto isDigit = [] (const unsigned char character, const std::string_view, const std::size_t) -> IsDigitResult {
+        if (characterIsDigit(character))
+            return { true, IsDigitReason::CharacterIsNumeric };
+        return { };
+    };
+
+    return calibrationValueForInput(input, isDigit);
 }
 
 auto digitRepresentedBySomeSubstringStartingAtCharacter(const std::string_view line, const std::size_t index) -> std::optional<uint64_t>
@@ -97,30 +101,29 @@ auto digitRepresentedBySomeSubstringStartingAtCharacter(const std::string_view l
     return std::nullopt;
 }
 
-void solvePart2(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
+auto solvePart2(const Utilities::ProblemInput& input) -> uint64_t
 {
-    auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
-        auto isDigit = [] (const unsigned char character, const std::string_view line, const std::size_t index) -> IsDigitResult {
-            if (characterIsDigit(character))
-                return { true, IsDigitReason::CharacterIsNumeric };
-            if (const auto& result = digitRepresentedBySomeSubstringStartingAtCharacter(line, index))
-                return { result, IsDigitReason::SubstringStartingAtCharacterIsDigitWord };
-            return { };
-        };
+    auto isDigit = [] (const unsigned char character, const std::string_view line, const std::size_t index) -> IsDigitResult {
+        if (characterIsDigit(character))
+            return { true, IsDigitReason::CharacterIsNumeric };
+        if (const auto& result = digitRepresentedBySomeSubstringStartingAtCharacter(line, index))
+            return { result, IsDigitReason::SubstringStartingAtCharacterIsDigitWord };
+        return { };
+    };
 
-        return sumOfCalibrationValues + calibrationValueForLine(line, isDigit);
-    });
-
-    if (showResults == Utilities::ShowResults::Yes)
-        std::cout << "Day 1 part 2 solution: " << sumOfCalibrationValues << '\n';
+    return calibrationValueForInput(input, isDigit);
 }
 
 void solveProblem(const Utilities::ProblemInputs& inputs, Utilities::ShowResults showResults)
 {
     const auto& [input1, input2] = inputs;
 
-    solvePart1(input1, showResults);
-    solvePart2(input2, showResults);
+    const auto part1Solution = solvePart1(input1);
+    const auto part2Solution = solvePart2(input2);
+    if (showResults == Utilities::ShowResults::Yes) {
+        std::cout << "Day 1 part 1 solution: " << part1Solution << '\n';
+        std::cout << "Day 1 part 2 solution: " << part2Solution << '\n';
+    }
 }
 
 } // namespace Day1
