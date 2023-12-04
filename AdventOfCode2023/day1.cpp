@@ -28,19 +28,7 @@ auto characterIsDigit(unsigned char character) -> bool
     return std::isdigit(character) != 0;
 }
 
-void solvePart1(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
-{
-    auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
-        const auto leftDigit = static_cast<uint64_t>(*std::ranges::find_if(line.cbegin(), line.cend(), characterIsDigit) - '0');
-        const auto rightDigit = static_cast<uint64_t>(*std::ranges::find_if(line.crbegin(), line.crend(), characterIsDigit) - '0');
-        const uint64_t calibrationValue = leftDigit * leftDigitMultiplier + rightDigit;
-        sumOfCalibrationValues += calibrationValue;
-        return sumOfCalibrationValues;
-    });
-
-    if (showResults == Utilities::ShowResults::Yes)
-        std::cout << "Day 1 part 1 solution: " << sumOfCalibrationValues << '\n';
-}
+enum class TraversalDirection : bool { LTR, RTL };
 
 enum class IsDigitReason : uint8_t { Unknown, CharacterIsNumeric, SubstringStartingAtCharacterIsDigitWord };
 struct IsDigitResult {
@@ -53,6 +41,51 @@ using namespace std::string_view_literals;
 constexpr std::array<std::string_view, 9> digitWords { "one"sv, "two"sv, "three"sv, "four"sv, "five"sv, "six"sv, "seven"sv, "eight"sv, "nine"sv };
 }
 
+auto produceDigit(const std::string& line, const std::function<IsDigitResult(const unsigned char, const std::string_view, const std::size_t)>& isDigit, const TraversalDirection direction) -> uint64_t {
+    const auto indices = [length = line.length(), &direction] {
+        std::vector<uint64_t> indicesToFill;
+        indicesToFill.resize(length);
+        std::iota(indicesToFill.begin(), indicesToFill.end(), 0);
+        if (direction == TraversalDirection::RTL)
+            std::ranges::reverse(indicesToFill);
+        return indicesToFill;
+    }();
+
+    for (const auto index : indices) {
+        const unsigned char character = line[index];
+        const auto [isDigitAnswer, isDigitReason] = isDigit(character, line, index);
+        switch (isDigitReason) {
+        case IsDigitReason::CharacterIsNumeric:
+            return static_cast<uint64_t>(character - '0');
+        case IsDigitReason::SubstringStartingAtCharacterIsDigitWord:
+            return *std::get<std::optional<uint64_t>>(isDigitAnswer);
+        case IsDigitReason::Unknown:
+            continue;
+        }
+    }
+
+    return 0ULL;
+}
+
+void solvePart1(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
+{
+    auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
+        const auto isDigit = [] (const unsigned char character, const std::string_view, const std::size_t) -> IsDigitResult {
+            if (characterIsDigit(character))
+                return { true, IsDigitReason::CharacterIsNumeric };
+            return { };
+        };
+        const auto leftDigit = produceDigit(line, isDigit, TraversalDirection::LTR);
+        const auto rightDigit = static_cast<uint64_t>(*std::ranges::find_if(line.crbegin(), line.crend(), characterIsDigit) - '0');
+        const uint64_t calibrationValue = leftDigit * leftDigitMultiplier + rightDigit;
+        sumOfCalibrationValues += calibrationValue;
+        return sumOfCalibrationValues;
+    });
+
+    if (showResults == Utilities::ShowResults::Yes)
+        std::cout << "Day 1 part 1 solution: " << sumOfCalibrationValues << '\n';
+}
+
 auto digitRepresentedBySomeSubstringStartingAtCharacter(const std::string_view line, const std::size_t index) -> std::optional<uint64_t>
 {
     for (uint64_t wordIndex = 0; wordIndex < digitWords.size(); ++wordIndex) {
@@ -62,12 +95,10 @@ auto digitRepresentedBySomeSubstringStartingAtCharacter(const std::string_view l
     return std::nullopt;
 }
 
-enum class TraversalDirection : bool { LTR, RTL };
-
 void solvePart2(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
 {
     auto sumOfCalibrationValues = std::accumulate(input.cbegin(), input.cend(), 0, [](uint64_t sumOfCalibrationValues, const auto& line) {
-        auto isDigit = [] (unsigned char character, const std::string_view line, const std::size_t index) -> IsDigitResult {
+        auto isDigit = [] (const unsigned char character, const std::string_view line, const std::size_t index) -> IsDigitResult {
             if (characterIsDigit(character))
                 return { true, IsDigitReason::CharacterIsNumeric };
             if (const auto& result = digitRepresentedBySomeSubstringStartingAtCharacter(line, index))
