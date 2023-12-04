@@ -12,7 +12,7 @@
 
 namespace Day1 {
 
-void solveProblem(const Utilities::ProblemInputs&, Utilities::ShowResults);
+void solveProblem(const Utilities::ProblemInput&, Utilities::ShowResults);
 
 } // namespace Day1
 

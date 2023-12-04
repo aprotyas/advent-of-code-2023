@@ -114,16 +114,13 @@ auto solvePart2(const Utilities::ProblemInput& input) -> uint64_t
     return calibrationValueForInput(input, isDigit);
 }
 
-void solveProblem(const Utilities::ProblemInputs& inputs, Utilities::ShowResults showResults)
+void solveProblem(const Utilities::ProblemInput& input, Utilities::ShowResults showResults)
 {
-    const auto& [input1, input2] = inputs;
+    const auto part1Solution = solvePart1(input);
+    const auto part2Solution = solvePart2(input);
 
-    const auto part1Solution = solvePart1(input1);
-    const auto part2Solution = solvePart2(input2);
-    if (showResults == Utilities::ShowResults::Yes) {
-        std::cout << "Day 1 part 1 solution: " << part1Solution << '\n';
-        std::cout << "Day 1 part 2 solution: " << part2Solution << '\n';
-    }
+    if (showResults == Utilities::ShowResults::Yes)
+        Utilities::displayAnswers(1, part1Solution, part2Solution);
 }
 
 } // namespace Day1

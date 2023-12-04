@@ -9,6 +9,7 @@
 #define utilities_hpp
 
 #include <functional>
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -17,9 +18,16 @@ namespace Utilities {
 
 enum class ShowResults : bool { No, Yes };
 
+using Day = std::size_t;
+
 using ProblemInput = std::vector<std::string>;
-using ProblemInputs = std::array<ProblemInput, 2>;
-using ProblemSolver = std::function<void(const ProblemInputs&, ShowResults)>;
+using ProblemSolver = std::function<void(const ProblemInput&, ShowResults)>;
+
+void displayAnswers(Day day, const auto& part1Solution, const auto& part2Solution)
+{
+    std::cout << "Day " << day << " Part 1: " << part1Solution << std::endl;
+    std::cout << "Day " << day << " Part 2: " << part2Solution << std::endl;
+}
 
 } // namespace Utilities
 

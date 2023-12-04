@@ -57,6 +57,7 @@
 		33E6C4342B1BEB5D007086D2 /* test45.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C2FD2B1BEB5D007086D2 /* test45.cpp */; };
 		33E6C4352B1BEB5D007086D2 /* test46.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C2FE2B1BEB5D007086D2 /* test46.cpp */; };
 		33E6C4362B1BEB5D007086D2 /* test47.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C2FF2B1BEB5D007086D2 /* test47.cpp */; };
+		33E6C43D2B1DA14C007086D2 /* day2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C43B2B1DA14C007086D2 /* day2.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,7 +77,6 @@
 		33E6BFBE2B19FFC5007086D2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		33E6BFCB2B1A0082007086D2 /* day1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = day1.cpp; sourceTree = "<group>"; };
 		33E6BFCC2B1A0082007086D2 /* day1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = day1.hpp; sourceTree = "<group>"; };
-		33E6BFCE2B1A0123007086D2 /* day1part1.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = day1part1.in; sourceTree = "<group>"; };
 		33E6BFCF2B1A0911007086D2 /* solutions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = solutions.hpp; sourceTree = "<group>"; };
 		33E6BFD02B1A0A68007086D2 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
 		33E6BFD12B1A0A68007086D2 /* utilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utilities.hpp; sourceTree = "<group>"; };
@@ -399,6 +399,10 @@
 		33E6C4022B1BEB5D007086D2 /* test114.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = test114.py; sourceTree = "<group>"; };
 		33E6C4032B1BEB5D007086D2 /* test115.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test115.out; sourceTree = "<group>"; };
 		33E6C4042B1BEB5D007086D2 /* test115.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = test115.py; sourceTree = "<group>"; };
+		33E6C43B2B1DA14C007086D2 /* day2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = day2.cpp; sourceTree = "<group>"; };
+		33E6C43C2B1DA14C007086D2 /* day2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = day2.hpp; sourceTree = "<group>"; };
+		33E6C4402B1DBD79007086D2 /* day1.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day1.in; sourceTree = "<group>"; };
+		33E6C4412B1DBD79007086D2 /* day2.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day2.in; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -432,12 +436,11 @@
 		33E6BFBD2B19FFC5007086D2 /* AdventOfCode2023 */ = {
 			isa = PBXGroup;
 			children = (
+				33E6C43A2B1DA0FE007086D2 /* Solutions */,
 				33E6BFBE2B19FFC5007086D2 /* main.cpp */,
 				33E6BFD32B1A1410007086D2 /* Inputs */,
 				33E6BFD02B1A0A68007086D2 /* utilities.cpp */,
 				33E6BFD12B1A0A68007086D2 /* utilities.hpp */,
-				33E6BFCB2B1A0082007086D2 /* day1.cpp */,
-				33E6BFCC2B1A0082007086D2 /* day1.hpp */,
 				33E6BFCF2B1A0911007086D2 /* solutions.hpp */,
 			);
 			path = AdventOfCode2023;
@@ -446,7 +449,8 @@
 		33E6BFD32B1A1410007086D2 /* Inputs */ = {
 			isa = PBXGroup;
 			children = (
-				33E6BFCE2B1A0123007086D2 /* day1part1.in */,
+				33E6C4402B1DBD79007086D2 /* day1.in */,
+				33E6C4412B1DBD79007086D2 /* day2.in */,
 			);
 			path = Inputs;
 			sourceTree = "<group>";
@@ -825,6 +829,17 @@
 			path = ThirdParty;
 			sourceTree = "<group>";
 		};
+		33E6C43A2B1DA0FE007086D2 /* Solutions */ = {
+			isa = PBXGroup;
+			children = (
+				33E6BFCB2B1A0082007086D2 /* day1.cpp */,
+				33E6BFCC2B1A0082007086D2 /* day1.hpp */,
+				33E6C43B2B1DA14C007086D2 /* day2.cpp */,
+				33E6C43C2B1DA14C007086D2 /* day2.hpp */,
+			);
+			path = Solutions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -896,6 +911,7 @@
 				33E6C4292B1BEB5D007086D2 /* test33.cpp in Sources */,
 				33E6C4252B1BEB5D007086D2 /* test29.cpp in Sources */,
 				33E6C40E2B1BEB5D007086D2 /* test5.cpp in Sources */,
+				33E6C43D2B1DA14C007086D2 /* day2.cpp in Sources */,
 				33E6C4352B1BEB5D007086D2 /* test46.cpp in Sources */,
 				33E6C4312B1BEB5D007086D2 /* test42.cpp in Sources */,
 				33E6C4152B1BEB5D007086D2 /* test12.cpp in Sources */,

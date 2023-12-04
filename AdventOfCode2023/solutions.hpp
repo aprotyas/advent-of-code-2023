@@ -8,6 +8,7 @@
 #ifndef solutions_h
 #define solutions_h
 
-#include "day1.hpp"
+#include "Solutions/day1.hpp"
+#include "Solutions/day2.hpp"
 
 #endif /* solutions_h */

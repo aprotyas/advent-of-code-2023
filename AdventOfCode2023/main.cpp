@@ -30,10 +30,9 @@
 
 #include <tclap/CmdLine.h>
 
-using Day = std::size_t;
 using namespace std::string_view_literals;
 
-static constexpr Day daysSolved = 1;
+static constexpr Utilities::Day daysSolved = 2;
 
 auto isCaseInsensitiveCharEqual(const char lhs, const char rhs) -> bool
 {
@@ -79,11 +78,12 @@ auto inputFromPath(const std::filesystem::path& path) -> Utilities::ProblemInput
     return input;
 }
 
-auto solveProblem(Day day, Utilities::ShowResults showResults) -> int
+auto solveProblem(Utilities::Day day, Utilities::ShowResults showResults) -> int
 {
     // This should be constexpr, but I'm too lazy to adopt https://github.com/serge-sans-paille/frozen.
-    static std::unordered_map<Day, Utilities::ProblemSolver> problemSolvers {
+    static std::unordered_map<Utilities::Day, Utilities::ProblemSolver> problemSolvers {
         { 1, Day1::solveProblem },
+        { 2, Day2::solveProblem },
     };
 
     if (!problemSolvers.contains(day)) {
@@ -92,31 +92,30 @@ auto solveProblem(Day day, Utilities::ShowResults showResults) -> int
     }
 
     std::cout << "Acquiring solution inputs for " << day << '\n';
-    const auto inputFileName = [&day] (int part) { return stringFormat("day%dpart%d.in", day, part); };
-    const auto inputFilePath = [] (const std::string& name) { return std::filesystem::path(__FILE__).parent_path() / "Inputs" / name; };
-    const auto inputFileNames = std::array { inputFileName(1), inputFileName(2) };
-    const auto inputFilePaths = std::array { inputFilePath(inputFileNames[0]), inputFilePath(inputFileNames[1]) };
-    const auto inputs = std::array { inputFromPath(inputFilePaths[0]), inputFromPath(inputFilePaths[1]) };
+    const auto inputFileName = [&day] { return stringFormat("day%d.in", day); }();
+    const auto inputFilePath = [] (const std::string& name) { return std::filesystem::path(__FILE__).parent_path() / "Inputs" / name; }(inputFileName);
+    const auto input = inputFromPath(inputFilePath);
 
     std::cout << "Solving day " << day << '\n';
-    problemSolvers[day](inputs, showResults);
+    problemSolvers[day](input, showResults);
     return EXIT_SUCCESS;
 }
 
 int main(int argc, const char * argv[]) {
-    const auto daysToSolve = [argc, argv] -> std::expected<std::vector<Day>, TCLAP::ArgException> {
+    const auto daysToSolve = [argc, argv] -> std::expected<std::vector<Utilities::Day>, TCLAP::ArgException> {
         try {
             TCLAP::CmdLine cmd("Solve the Advent of Code 2023 problems.");
             TCLAP::SwitchArg solveAllArg("a", "all", "Solve all problems.");
 
             auto allowedDays = [] {
                 // This should really be std::views::iota | std::ranges::to, but clang-1500.3.3.4 doesn't implement the latter.
-                std::vector<Day> days { daysSolved };
+                std::vector<Utilities::Day> days;
+                days.resize(daysSolved);
                 std::iota(days.begin(), days.end(), 1);
                 return days;
             }();
-            const auto daysArgConstraint = std::make_unique<TCLAP::ValuesConstraint<Day>>(allowedDays);
-            TCLAP::UnlabeledMultiArg<Day> daysArg("days", "The days to solve.", false, daysArgConstraint.get());
+            const auto daysArgConstraint = std::make_unique<TCLAP::ValuesConstraint<Utilities::Day>>(allowedDays);
+            TCLAP::UnlabeledMultiArg<Utilities::Day> daysArg("days", "The days to solve.", false, daysArgConstraint.get());
 
             TCLAP::OneOf argumentGroup { cmd };
             argumentGroup.add(solveAllArg).add(daysArg);
@@ -136,7 +135,7 @@ int main(int argc, const char * argv[]) {
     // This could be chained monadically with std::expected::[and_then, or_else], but clang-1500.3.3.4 doesn't implement these operations.
     int returnValue = EXIT_SUCCESS;
     if (daysToSolve)
-        std::ranges::for_each(daysToSolve.value(), [&returnValue] (Day day) { returnValue &= solveProblem(day, Utilities::ShowResults::Yes); });
+        std::ranges::for_each(daysToSolve.value(), [&returnValue] (Utilities::Day day) { returnValue &= solveProblem(day, Utilities::ShowResults::Yes); });
     else
         std::cerr << "Error: " << daysToSolve.error().error() << '\n';
 
